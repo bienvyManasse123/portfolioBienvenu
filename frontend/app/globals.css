@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+ 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+/* ─── Variables ─── */
+:root {
+  --accent: #00e676;
+  --dark:   #0d1117;
+  --dark2:  #161b22;
+  --dark3:  #1c2333;
+}
+ 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+html { scroll-behavior: smooth; }
+ 
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--dark);
+  color: #ffffff;
+  overflow-x: hidden;
+}
+ 
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+::selection { background: var(--accent); color: #000; }
+ 
+/* ─── Animation page load ─── */
+@keyframes pageReveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+ 
+/* ─── Animations flottantes des shapes ─── */
+/* floatA : monte/descend + légère rotation */
+@keyframes floatA {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-16px) rotate(8deg); }
+  66%       { transform: translateY(-8px) rotate(-5deg); }
+}
+ 
+/* floatB : mouvement plus lent, plus ample */
+@keyframes floatB {
+  0%, 100% { transform: translateY(0px) rotate(45deg); }
+  50%       { transform: translateY(-22px) rotate(62deg); }
+}
+ 
+/* floatC : oscillation douce verticale */
+@keyframes floatC {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(12px); }
+}
+ 
+/* floatD : inverse + légère rotation */
+@keyframes floatD {
+  0%, 100% { transform: translateY(0px) rotate(180deg); }
+  50%       { transform: translateY(-14px) rotate(200deg); }
+}
+ 
+/* spinSlow : rotation complète très lente */
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+ 
+/* pulse : scale pulsé */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.2; }
+  50%       { transform: scale(1.15); opacity: 0.08; }
+}
+ 
+/* ─── Classes d'animation ─── */
+.animate-floatA    { animation: floatA    5s ease-in-out infinite; }
+.animate-floatB    { animation: floatB    7s ease-in-out infinite; }
+.animate-floatC    { animation: floatC    4s ease-in-out infinite; }
+.animate-floatD    { animation: floatD    9s ease-in-out infinite; }
+.animate-spinSlow  { animation: spinSlow 20s linear infinite; }
+.animate-pulse-slow{ animation: pulse     6s ease-in-out infinite; }
