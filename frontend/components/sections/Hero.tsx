@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import FloatingShapes from "@/components/animations/FloatingShapes"
 import { CV_URL, GITHUB_URL, LINKEDIN_URL } from "@/lib/constants"
 import Link from "next/link"
+import { useLang } from "@/components/providers/LangProvider"
  
 /* ── Typer Effect ─────────────────────────────────────── */
 function useTyper(words: string[], speed = 75, pause = 2000) {
@@ -21,7 +22,10 @@ function useTyper(words: string[], speed = 75, pause = 2000) {
     } else if (deleting && charIdx > 0) {
       t = setTimeout(() => { setDisplay(current.slice(0, charIdx-1)); setCharIdx(i=>i-1) }, speed/2)
     } else {
-      setDeleting(false); setWordIdx(i=>(i+1)%words.length)
+      t = setTimeout(() => {
+        setDeleting(false)
+        setWordIdx(i => (i + 1) % words.length)
+      }, 2000)
     }
     return () => clearTimeout(t)
   }, [charIdx, deleting, wordIdx, words, speed, pause])
@@ -61,7 +65,7 @@ function SocialBtn({ href, icon }: { href: string; icon: "github"|"linkedin" }) 
 }
  
 /* ── ScrollIndicator animé ───────────────────────────── */
-function ScrollIndicator() {
+function ScrollIndicator({ label }: { label: string }) {
   return (
     <>
       <style>{`
@@ -82,7 +86,7 @@ function ScrollIndicator() {
         }
       `}</style>
  
-      <div style={{
+      <div className="hero-scroll-indicator" style={{
         position:"absolute", bottom:1, left:"50%",
         transform:"translateX(-50%)",
         display:"flex", flexDirection:"column", alignItems:"center", gap:4,
@@ -128,7 +132,7 @@ function ScrollIndicator() {
           fontSize:9, color:"#8b949e",
           letterSpacing:"0.15em", textTransform:"uppercase",
           marginTop:4,
-        }}>Scroll</p>
+        }}>{label}</p>
       </div>
     </>
   )
@@ -136,20 +140,54 @@ function ScrollIndicator() {
  
 /* ── Hero principal ──────────────────────────────────── */
 export default function Hero() {
-  const typed   = useTyper(["Développeur Full Stack.", "Designer UI/UX."], 75, 2000)
+  const { t } = useLang()
+  const typed   = useTyper([...t.hero.typed], 100, 1000)
   const [cvH, setCvH]   = useState(false)
   const [imgH, setImgH] = useState(false)
  
   return (
-    <section id="hero" style={{
+    <section id="hero" className="hero-section" style={{
       position:"relative", minHeight:"90vh",
       background:"#0d1117",
       display:"flex", alignItems:"center",
       padding:"80px 80px 0", overflow:"hidden",
     }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .hero-section {
+            min-height: auto !important;
+            padding: 108px 20px 36px !important;
+          }
+          .hero-content {
+            gap: 28px !important;
+            justify-content: center !important;
+          }
+          .hero-left {
+            min-width: 100% !important;
+            max-width: 100% !important;
+            text-align: center;
+          }
+          .hero-left p {
+            max-width: 100% !important;
+          }
+          .hero-actions {
+            justify-content: center;
+          }
+          .hero-photo-wrap {
+            display: none !important;
+          }
+          .hero-photo-card {
+            width: 220px !important;
+            height: 290px !important;
+          }
+          .hero-scroll-indicator {
+            display: none !important;
+          }
+        }
+      `}</style>
       <FloatingShapes variant="hero"/>
  
-      <div style={{
+      <div className="hero-content" style={{
         position:"relative", zIndex:2,
         display:"flex", alignItems:"center",
         justifyContent:"space-between",
@@ -158,7 +196,7 @@ export default function Hero() {
       }}>
  
         {/* ── Gauche ── */}
-        <div style={{ flex:1, minWidth:280, maxWidth:540 }}>
+        <div className="hero-left" style={{ flex:1, minWidth:280, maxWidth:540 }}>
  
           {/* Badge available */}
           <div style={{
@@ -175,7 +213,7 @@ export default function Hero() {
               display:"inline-block",
             }}/>
             <span style={{ fontSize:12, color:"#00e676", fontWeight:500 }}>
-              Available actuellement
+              {t.hero.available}
             </span>
             <style>{`@keyframes ping{0%{box-shadow:0 0 0 0 rgba(0,230,118,.5)}70%{box-shadow:0 0 0 8px rgba(0,230,118,0)}100%{box-shadow:0 0 0 0 rgba(0,230,118,0)}}`}</style>
           </div>
@@ -184,11 +222,11 @@ export default function Hero() {
             fontSize:13, fontWeight:500, letterSpacing:"0.12em",
             color:"#8b949e", textTransform:"uppercase", marginBottom:10,
             animation:"pageReveal 0.5s ease 0.2s both",
-          }}>Hello, I'm a</p>
+          }}>{t.hero.intro}</p>
  
           {/* Typer */}
           <h1 style={{
-            fontSize:"clamp(30px,4.5vw,56px)",
+            fontSize:"clamp(30px,4.5vw,46px)",
             fontWeight:800, lineHeight:1.15, marginBottom:24,
             animation:"pageReveal 0.6s ease 0.3s both",
             minHeight:"1.4em",
@@ -204,15 +242,14 @@ export default function Hero() {
  
           <p style={{
             fontSize:15, color:"#8b949e", lineHeight:1.8,
-            maxWidth:420, marginBottom:36,
+            maxWidth:550, marginBottom:36,
             animation:"pageReveal 0.6s ease 0.5s both",
           }}>
-            Passionné par la création d'applications web performantes et élégantes.
-            Basé à Madagascar, disponible pour des projets à distance.
+            {t.hero.description}
           </p>
  
           {/* Boutons */}
-          <div style={{
+          <div className="hero-actions" style={{
             display:"flex", gap:12, alignItems:"center", flexWrap:"wrap",
             animation:"pageReveal 0.6s ease 0.7s both",
           }}>
@@ -235,7 +272,7 @@ export default function Hero() {
                 stroke="currentColor" strokeWidth="2.5">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
               </svg>
-              Download CV
+              {t.hero.downloadCv}
             </Link>
  
             <SocialBtn href={GITHUB_URL}   icon="github"   />
@@ -245,6 +282,7 @@ export default function Hero() {
  
         {/* ── Photo ── */}
         <div
+          className="hero-photo-wrap"
           onMouseEnter={()=>setImgH(true)} onMouseLeave={()=>setImgH(false)}
           style={{
             position:"relative", flexShrink:0,
@@ -268,10 +306,10 @@ export default function Hero() {
               : "translate(-50%,-50%) scale(1)",
           }}/>
           {/* Image */}
-          <div style={{
+          <div className="hero-photo-card" style={{
             position:"relative", zIndex:1,
             width:270, height:350,
-            borderRadius:"50% 50% 50% 50% / 60% 60% 40% 40%",
+            borderRadius:"50% 50% 50% 50% / 40% 40% 40% 40%",
             background:"#1c2333",
             border:`2px solid ${imgH ? "rgba(0,230,118,0.5)" : "rgba(0,230,118,0.2)"}`,
             display:"flex", alignItems:"center", justifyContent:"center",
@@ -282,13 +320,14 @@ export default function Hero() {
               ? "0 32px 64px rgba(0,230,118,0.18), 0 0 0 1px rgba(0,230,118,0.25)"
               : "none",
           }}>
-            <span style={{ fontSize:80, opacity:0.22 }}>👤</span>
+            {/* <span style={{ fontSize:80, opacity:0.22 }}>👤</span> */}
+            <img src="/images/i.jpeg" alt="Bienvenu" style={{width:"100%",height:"100%",objectFit:"cover"}} />
           </div>
         </div>
       </div>
  
       {/* Scroll indicator vivant */}
-      <ScrollIndicator/>
+      <ScrollIndicator label={t.hero.scroll} />
     </section>
   )
 }

@@ -9,13 +9,11 @@ Ceci est mon portfolio professionnel conçu pour présenter mes projets, mes com
 | :--- | :--- |
 | **Next.js 16.2.4** | Frontend (App Router, Tailwind CSS, Framer Motion) |
 | **FastAPI** | Backend (Python, Pydantic, Asynchrone) |
-| **Docker** | Conteneurisation pour le déploiement |
 
 ## ✨ Fonctionnalités
 
 - **Interface Moderne :** Design responsive avec animations fluides (Framer Motion).
 - **Gestion des Projets :** API dynamique pour récupérer mes réalisations depuis le backend.
-- **CI/CD :** Pipeline automatisé pour le test et le déploiement.
 
 ## 📁 Structure du Projet
 
@@ -23,4 +21,3 @@ Ceci est mon portfolio professionnel conçu pour présenter mes projets, mes com
 portfolio/
 ├── frontend/    # Client Next.js (React, TypeScript)
 ├── backend/     # API REST (FastAPI, Python)
-└── docker-compose.yml

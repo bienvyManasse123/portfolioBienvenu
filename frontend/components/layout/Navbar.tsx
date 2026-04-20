@@ -2,22 +2,22 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { SITE_NAME, GITHUB_URL, LINKEDIN_URL } from "@/lib/constants"
+import { useLang } from "@/components/providers/LangProvider"
  
 export default function Navbar() {
   const [scrolled, setScrolled]       = useState(false)
   const [activeSection, setActive]    = useState("hero")
-  const [lang, setLang]               = useState<"FR"|"EN">("FR")
   const [dark, setDark]               = useState(true)
   const [menuOpen, setMenuOpen]       = useState(false)
   const [hoveredLink, setHoveredLink] = useState<string|null>(null)
+  const { lang, setLang, t } = useLang()
  
   const navItems = [
-    { label: lang==="FR" ? "Accueil"   : "Hello", href: "#hero" },
-    { label: lang==="FR" ? "À propos"  : "About", href: "#about" },
-    { label: lang==="FR" ? "Services"  : "Services", href: "#services" },
-    { label: lang==="FR" ? "Projets"  : "Work", href: "#work" },
-    // { label: "Skills", href: "#skills" },
-    { label: "Contact", href: "#contact" },
+    { label: t.nav.home, href: "#hero" },
+    { label: t.nav.about, href: "#about" },
+    { label: t.nav.services, href: "#services" },
+    { label: t.nav.work, href: "#work" },
+    { label: t.nav.contact, href: "#contact" },
   ]
  
   useEffect(() => {
@@ -116,12 +116,14 @@ export default function Navbar() {
  
         {/* Logo */}
         <Link href="/" style={{display:"flex",alignItems:"center",gap:10,textDecoration:"none",zIndex:10}}>
-          <div style={{
-            width:38,height:38,borderRadius:10,background:"#00e676",
-            display:"flex",alignItems:"center",justifyContent:"center",
-            fontWeight:800,fontSize:17,color:"#000",
-          }}>A</div>
-          <span style={{fontWeight:600,color:"#fff",fontSize:16}}>{SITE_NAME}</span>
+          <svg width="38" height="38" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <rect width="64" height="64" rx="14" fill="#0d1117"/>
+            <rect x="8" y="14" width="3" height="36" rx="1.5" fill="#00e676"/>
+            <text x="13" y="46" fontFamily="Inter,system-ui,sans-serif" fontSize="30" fontWeight="800" fill="#ffffff" letterSpacing="-1">B</text>
+            <text x="34" y="46" fontFamily="Inter,system-ui,sans-serif" fontSize="30" fontWeight="800" fill="#00e676" letterSpacing="-1">M</text>
+            <circle cx="56" cy="52" r="3" fill="#00e676" opacity="0.8"/>
+          </svg>
+          <span style={{fontWeight:700,color:"#fff",fontSize:16}}>{SITE_NAME}</span>
         </Link>
  
         {/* ── Desktop nav ── */}
@@ -134,7 +136,7 @@ export default function Navbar() {
                 key={link.label} href={link.href}
                 className={`nav-link ${isActive ? "active" : ""}`}
                 style={{
-                  fontSize:13, fontWeight:500,
+                  fontSize:15, fontWeight:700,
                   textDecoration:"none", padding:"8px 14px",
                   display:"block",
                 }}
@@ -152,7 +154,7 @@ export default function Navbar() {
         <div style={{display:"flex",alignItems:"center",gap:10}}>
  
           {/* Langue */}
-          <button onClick={()=>setLang(l=>l==="FR"?"EN":"FR")} style={{
+          <button onClick={()=>setLang(lang==="FR"?"EN":"FR")} style={{
             display:"flex",alignItems:"center",gap:6,
             padding:"6px 12px",borderRadius:50,
             border:"1px solid rgba(255,255,255,0.12)",
@@ -170,7 +172,7 @@ export default function Navbar() {
           </button>
  
           {/* Dark/Light */}
-          <button onClick={()=>setDark(d=>!d)} style={{
+          {/* <button onClick={()=>setDark(d=>!d)} style={{
             width:36,height:36,borderRadius:"50%",
             border:"1px solid rgba(255,255,255,0.12)",
             background:"transparent",cursor:"pointer",
@@ -190,7 +192,7 @@ export default function Navbar() {
                 <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
               </svg>
             )}
-          </button>
+          </button> */}
  
           {/* CTA — caché sur mobile */}
           <Link href="#contact" className="cta-btn" style={{
@@ -198,12 +200,12 @@ export default function Navbar() {
             border:"1px solid #00e676",borderRadius:6,
             color:"#00e676",fontSize:12,fontWeight:700,
             textDecoration:"none",letterSpacing:"0.08em",
-            textTransform:"uppercase",transition:"all 0.25s ease",
+            textTransform:"uppercase",transition:"all 0.25s ease", borderRadius:50,
           }}
             onMouseEnter={e=>{(e.currentTarget as HTMLAnchorElement).style.background="#00e676";(e.currentTarget as HTMLAnchorElement).style.color="#000"}}
             onMouseLeave={e=>{(e.currentTarget as HTMLAnchorElement).style.background="transparent";(e.currentTarget as HTMLAnchorElement).style.color="#00e676"}}
           >
-            Let's Talk
+            {t.nav.cta}
           </Link>
  
           {/* ── Burger (mobile only) ── */}
@@ -263,7 +265,7 @@ export default function Navbar() {
                     marginLeft:8, fontSize:11, color:"#00e676",
                     background:"rgba(0,230,118,0.1)",
                     padding:"2px 8px", borderRadius:20,
-                  }}>active</span>
+                  }}>{t.nav.active}</span>
                 )}
               </Link>
             )
@@ -273,21 +275,21 @@ export default function Navbar() {
           <div style={{height:1,background:"rgba(255,255,255,0.06)",margin:"12px 32px"}}/>
  
           {/* Boutons bas de menu mobile */}
-          <div style={{display:"flex",gap:12,padding:"0 32px"}}>
-            <button onClick={()=>{setLang(l=>l==="FR"?"EN":"FR");setMenuOpen(false)}} style={{
+          <div className="mobile-bottom-actions" style={{display:"flex",gap:12,padding:"0 32px"}}>
+            <button className="mobile-lang-btn" onClick={()=>{setLang(lang==="FR"?"EN":"FR");setMenuOpen(false)}} style={{
               flex:1,padding:"10px",borderRadius:50,
               border:"1px solid rgba(255,255,255,0.12)",
               background:"transparent",color:"#8b949e",fontSize:13,cursor:"pointer",
             }}>
               {lang==="FR"?"🌐 EN":"🌐 FR"}
             </button>
-            <Link href="#contact" onClick={()=>setMenuOpen(false)} style={{
+            <Link className="mobile-cta-btn" href="#contact" onClick={()=>setMenuOpen(false)} style={{
               flex:2,padding:"10px",borderRadius:6,
               background:"#00e676",color:"#000",
               textDecoration:"none",fontSize:13,fontWeight:700,
               textAlign:"center",letterSpacing:"0.05em",
             }}>
-              Let's Talk
+              {t.nav.cta}
             </Link>
           </div>
         </div>
@@ -300,6 +302,41 @@ export default function Navbar() {
           .cta-btn     { display: none !important; }
           #burger      { display: flex !important; }
           nav          { padding: 0 20px !important; }
+          .mobile-bottom-actions {
+            display: grid !important;
+            grid-template-columns: 1fr 1.4fr;
+            align-items: stretch;
+            gap: 10px !important;
+            padding: 0 20px !important;
+          }
+          .mobile-lang-btn,
+          .mobile-cta-btn {
+            min-height: 44px;
+            border-radius: 999px !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px !important;
+            letter-spacing: 0.06em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+          }
+          .mobile-lang-btn {
+            border: 1px solid rgba(0,230,118,0.35) !important;
+            color: #00e676 !important;
+            background: rgba(0,230,118,0.08) !important;
+            font-weight: 700;
+          }
+          .mobile-cta-btn {
+            background: linear-gradient(135deg, #00e676, #21f78a) !important;
+            color: #05150c !important;
+            box-shadow: 0 8px 18px rgba(0,230,118,0.25);
+            font-weight: 800 !important;
+            text-transform: uppercase;
+          }
+          .mobile-lang-btn:active,
+          .mobile-cta-btn:active {
+            transform: translateY(1px);
+          }
         }
         @media (min-width: 769px) {
           #burger      { display: none !important; }
